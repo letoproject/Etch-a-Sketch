@@ -1,0 +1,25 @@
+body {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  height: 23px;
+  width: 23px;
+  border: 1px solid #c2c2c2;
+  background-color:antiquewhite;
+}
+
+/* .box:hover {
+  background-color:blueviolet
+} */
