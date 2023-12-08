@@ -1,23 +1,52 @@
-body {
+/* :box {
+  --height: 0px;
+  --width: 0px;
+} */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+    background-color: antiquewhite;
+}
+
+header {
+  padding: 24px 0;
+}
+
+.title {
+  text-align: center;
+  font-size: 48px;
+}
+
+.main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
+  gap: 24px;
 }
 
 .container {
-  width: 400px;
+  width: 500px;
+  height: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  background-color: #fff;
 }
 
 .box {
-  height: 23px;
-  width: 23px;
   border: 1px solid #c2c2c2;
-  background-color:antiquewhite;
+  user-select: none;
 }
 
 /* .box:hover {
