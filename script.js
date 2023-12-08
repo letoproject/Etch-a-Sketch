@@ -7,7 +7,7 @@ const resetBtn = document.querySelector(".reset");
 const monoBtn = document.querySelector(".mono");
 const rgbBtn = document.querySelector(".rgb");
 const eraserBtn = document.querySelector(".eraser");
-const darkBtn = document.querySelector(".dark");
+const shadowBtn = document.querySelector(".shadow");
 
 let currentSize = DEFAULT_SIZE;
 let currentMode = DEFAULT_MODE;
@@ -17,8 +17,7 @@ resetBtn.addEventListener("click", resetGrid);
 monoBtn.onclick = () => setCurrentMode("mono");
 rgbBtn.onclick = () => setCurrentMode("rgb");
 eraserBtn.onclick = () => setCurrentMode("eraser");
-darkBtn.onclick = () => setCurrentMode("dark");
-console.log(currentMode);
+shadowBtn.onclick = () => setCurrentMode("shadow");
 
 let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
@@ -32,6 +31,7 @@ function createGrid(currentSize) {
     box.classList.add("box");
     box.style.width = `${boxSize}%`;
     box.style.height = `${boxSize}%`;
+    box.style.backgroundColor = "rgba(255, 255, 255, 1)";
     box.addEventListener("mouseover", changeColor);
     box.addEventListener("mousedown", changeColor);
     container.appendChild(box);
@@ -45,16 +45,17 @@ function changeColor(e) {
 
   switch (currentMode) {
     case "mono":
-      e.target.style.backgroundColor = "#000";
+      e.target.style.backgroundColor = "rgba(0, 0, 0, 1)";
       return;
     case "rgb":
       e.target.style.backgroundColor = getRandomRGBAColor();
+      // e.target.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
       return;
     case "eraser":
-      e.target.style.backgroundColor = "#fff";
+      e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
       return;
-    case "dark":
-      getDark(e);
+    case "shadow":
+      e.target.style.backgroundColor = getShadow(e);
     default:
       return;
   }
@@ -85,8 +86,40 @@ function getRandomRGBAColor() {
   return `rgba(${r}, ${g}, ${b}, 1)`;
 }
 
-function getDark(e) {
-  let color = e.target.style.backgroundColor;
+function getShadow(e) {
+  let toRGBAcolor = "";
+  let currentOpacity = "";
+  let newRGBAColor = "";
+  let currentColor = e.target.style.backgroundColor;
+
+  if (currentColor.indexOf("rgba") === -1) {
+    // convert 'rgb(R,G,B)' to 'rgb(R,G,B)A' which looks awful but will pass the regxep below
+    toRGBAcolor = currentColor.match(/[\.\d]+/g).map((a) => +a);
+    currentOpacity = 0.1;
+
+    if (
+      toRGBAcolor[0] === 255 &&
+      toRGBAcolor[1] === 255 &&
+      toRGBAcolor[2] === 255
+    ) {
+      newRGBAColor = `rgba(0, 0, 0, ${currentOpacity})`;
+      return newRGBAColor;
+    }
+    newRGBAColor = `rgba(${toRGBAcolor[0]}, ${toRGBAcolor[1]}, ${toRGBAcolor[2]}, ${currentOpacity})`;
+    return newRGBAColor;
+  }
+
+  toRGBAcolor = currentColor.match(/[\.\d]+/g);
+
+  currentOpacity = Number(toRGBAcolor[3]);
+  if (currentOpacity === 0.1 || currentOpacity <= 1) {
+    currentOpacity += 0.1;
+    newRGBAColor = `rgba(${toRGBAcolor[0]}, ${toRGBAcolor[1]}, ${toRGBAcolor[2]}, ${currentOpacity})`;
+    return newRGBAColor;
+  }
+
+  console.log("newRGBAColor", newRGBAColor);
+  return (e.target.style.backgroundColor = newRGBAColor);
 }
 
 function setCurrentSize(newSize) {
